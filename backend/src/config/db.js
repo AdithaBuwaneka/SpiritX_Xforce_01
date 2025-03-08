@@ -1,12 +1,17 @@
-// backend/src/config/db.js
 const mongoose = require('mongoose');
 
+/**
+ * Connect to MongoDB
+ * Handles connection setup and error handling
+ */
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB Connected');
-  } catch (err) {
-    console.error('Error connecting to MongoDB:', err);
+    const conn = await mongoose.connect(process.env.MONGO_URI);
+
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
+    return true;
+  } catch (error) {
+    console.error(`Error connecting to MongoDB: ${error.message}`);
     process.exit(1);
   }
 };
