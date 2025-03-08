@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FaUser, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaUserShield } from 'react-icons/fa';
 import { signupUser } from '../services/authService';
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 
@@ -161,6 +161,9 @@ const SignupPage = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-gray-800 p-8 rounded-lg shadow-lg">
         <div className="text-center">
+          <div className="flex justify-center mb-4">
+            <FaUserShield className="h-12 w-12 text-pink-500" />
+          </div>
           <h1 className="text-3xl font-extrabold text-pink-500">SecureConnect</h1>
           <h2 className="mt-6 text-2xl font-bold text-white">Sign Up</h2>
           <p className="mt-2 text-sm text-gray-400">Create your account to get started</p>
