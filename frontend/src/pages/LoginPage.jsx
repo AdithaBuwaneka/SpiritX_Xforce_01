@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import { FaEye, FaEyeSlash, FaUserShield } from 'react-icons/fa';
+import { FaUser, FaLock, FaEye, FaEyeSlash, FaUserShield } from 'react-icons/fa';
 import { loginUser } from '../services/authService';
 import { useAuth } from '../contexts/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
+
+// CSS to hide browser's default password toggle
+const hidePasswordControls = `
+  input::-ms-reveal,
+  input::-ms-clear,
+  input::-webkit-contacts-auto-fill-button,
+  input::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+`;
 
 const LoginPage = () => {
   const navigate = useNavigate();
@@ -124,122 +136,123 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-xs sm:max-w-sm md:max-w-md space-y-6 sm:space-y-8 bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg transition-all duration-300">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <FaUserShield className="h-12 w-12 text-pink-500" />
+    <>
+      {/* Inject CSS to hide browser's default password toggle */}
+      <style>{hidePasswordControls}</style>
+      
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 py-6 sm:py-8 md:py-12 px-4 sm:px-6 lg:px-8">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md space-y-6 sm:space-y-8 bg-gray-800 p-6 sm:p-8 rounded-lg shadow-lg transition-all duration-300">
+          <div className="text-center">
+            <div className="flex justify-center mb-4">
+              <FaUserShield className="h-12 w-12 text-pink-500" />
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-pink-500">SecureConnect</h1>
+            <h2 className="mt-4 sm:mt-6 text-xl sm:text-2xl font-bold text-white">Login</h2>
+            <p className="mt-2 text-xs sm:text-sm text-gray-400">Sign in to your account</p>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-pink-500">SecureConnect</h1>
-          <h2 className="mt-4 sm:mt-6 text-xl sm:text-2xl font-bold text-white">Login</h2>
-          <p className="mt-2 text-xs sm:text-sm text-gray-400">Sign in to your account</p>
-        </div>
-        
-        <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
-          {/* Form error message */}
-          {errors.form && (
-            <div className="bg-red-900/50 text-red-200 p-2 sm:p-3 rounded-md text-xs sm:text-sm">
-              {errors.form}
-            </div>
-          )}
           
-          {/* Username field */}
-          <div>
-            <label htmlFor="username" className="sr-only">Username</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                {/* User SVG icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
-                </svg>
+          <form className="mt-6 sm:mt-8 space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
+            {/* Form error message */}
+            {errors.form && (
+              <div className="bg-red-900/50 text-red-200 p-2 sm:p-3 rounded-md text-xs sm:text-sm">
+                {errors.form}
               </div>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                autoComplete="username"
-                value={formData.username}
-                onChange={handleChange}
-                className={`appearance-none relative block w-full px-3 py-2 sm:py-3 pl-10 border ${
-                  errors.username ? 'border-red-500' : 'border-gray-600'
-                } bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm sm:text-base`}
-                placeholder="Username"
-              />
-            </div>
-            {errors.username && (
-              <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.username}</p>
             )}
-          </div>
-          
-          {/* Password field */}
-          <div>
-            <label htmlFor="password" className="sr-only">Password</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                {/* Lock SVG icon */}
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
-                </svg>
+            
+            {/* Username field */}
+            <div>
+              <label htmlFor="username" className="sr-only">Username</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center z-10">
+                  <FaUser className="h-5 w-5 text-gray-500" />
+                </div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 sm:py-3 pl-10 border
+                    border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent 
+                    text-sm sm:text-base"
+                  placeholder="Username"
+                />
               </div>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="current-password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`appearance-none relative block w-full px-3 py-2 sm:py-3 pl-10 pr-10 border ${
-                  errors.password ? 'border-red-500' : 'border-gray-600'
-                } bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm sm:text-base`}
-                placeholder="Password"
-              />
+              {errors.username && (
+                <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.username}</p>
+              )}
+            </div>
+            
+            {/* Password field */}
+            <div>
+              <label htmlFor="password" className="sr-only">Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center z-10">
+                  <FaLock className="h-5 w-5 text-gray-500" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password" // This helps prevent browser's default eye icon
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-2 sm:py-3 pl-10 pr-10 border
+                    border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent 
+                    text-sm sm:text-base"
+                  placeholder="Password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center z-10"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+                  ) : (
+                    <FaEye className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.password}</p>
+              )}
+            </div>
+            
+            {/* Submit button */}
+            <div className="pt-2">
               <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? "Hide password" : "Show password"}
+                type="submit"
+                disabled={isSubmitting}
+                className="group relative w-full flex justify-center py-2 sm:py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {showPassword ? (
-                  <FaEyeSlash className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+                {isSubmitting ? (
+                  <span className="flex items-center">
+                    <LoadingSpinner size={windowWidth < 640 ? "xs" : "sm"} color="white" />
+                    <span className="ml-2">Logging In...</span>
+                  </span>
                 ) : (
-                  <FaEye className="h-4 w-4 sm:h-5 sm:w-5 text-gray-500" />
+                  'Login'
                 )}
               </button>
             </div>
-            {errors.password && (
-              <p className="mt-1 text-xs sm:text-sm text-red-400">{errors.password}</p>
-            )}
-          </div>
+          </form>
           
-          {/* Submit button */}
-          <div className="pt-2">
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="group relative w-full flex justify-center py-2 sm:py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isSubmitting ? (
-                <span className="flex items-center">
-                  <LoadingSpinner size={windowWidth < 640 ? "xs" : "sm"} color="white" />
-                  <span className="ml-2">Logging In...</span>
-                </span>
-              ) : (
-                'Login'
-              )}
-            </button>
+          <div className="text-center mt-4">
+            <p className="text-xs sm:text-sm text-gray-400">
+              Don't have an account?{' '}
+              <Link to="/signup" className="font-medium text-pink-500 hover:text-pink-400">
+                Sign Up
+              </Link>
+            </p>
           </div>
-        </form>
-        
-        <div className="text-center mt-4">
-          <p className="text-xs sm:text-sm text-gray-400">
-            Don't have an account?{' '}
-            <Link to="/signup" className="font-medium text-pink-500 hover:text-pink-400">
-              Sign Up
-            </Link>
-          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
