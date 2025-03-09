@@ -7,6 +7,13 @@
 - npm (v6 or higher)
 - MongoDB (local or Atlas)
 
+### Clone the Repository
+1. Clone the repository from GitHub:
+   ```bash
+   git clone https://github.com/AdithaBuwaneka/Spiritx.git
+   cd Spiritx
+   ```
+
 ### Backend Setup
 1. Navigate to the backend directory:
    ```bash
@@ -55,7 +62,7 @@
    ```bash
    npm run dev
    ```
-   
+   The application will be available at http://localhost:5173
 
 ## Database Setup and Configuration
 
