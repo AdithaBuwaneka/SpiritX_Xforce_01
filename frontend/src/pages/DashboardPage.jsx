@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { FaSignOutAlt, FaUserShield } from 'react-icons/fa';
@@ -10,12 +10,62 @@ const DashboardPage = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [loading, setLoading] = useState(true);
-  // Removing unused state variable
-  // const [userData, setUserData] = useState(null);
+  
+  // Add states for session management
+  const [sessionTime, setSessionTime] = useState(30 * 60); // 30 minutes in seconds
+  const [lastLoginTime, setLastLoginTime] = useState(new Date().toLocaleTimeString());
+
+  // Handle logout with useCallback
+  const handleLogout = useCallback(async () => {
+    try {
+      await logoutUser();
+      logout();
+      navigate('/login');
+    
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Force logout even if API call fails
+      logout();
+      navigate('/login');
+    }
+  }, [logout, navigate]);
+
+  // Handle session timeout with useCallback
+  const handleSessionTimeout = useCallback(() => {
+    // Use toast.error with an ID to prevent duplicates
+    toast.error('Your session has expired. Please login again.', {
+      id: 'session-timeout', // Unique ID prevents duplicate toasts
+      duration: 5000 // 5 seconds
+    });
+    handleLogout();
+  }, [handleLogout]);
+
+  // Fetch user data with useCallback  
+  const fetchUserData = useCallback(async () => {
+    try {
+      console.log('Attempting to fetch user data...');
+      const data = await getCurrentUser();
+      console.log('User data successfully fetched', data);
+      
+      // Update last login time if available in the API response
+      if (data && data.lastLogin) {
+        setLastLoginTime(new Date(data.lastLogin).toLocaleString());
+      }
+    } catch (error) {
+      console.log('Error fetching user data:', error);
+      // We won't automatically log out the user now
+    }
+  }, []);
+
+  // Format time function for countdown display
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+  };
 
   useEffect(() => {
-    // IMPORTANT: We're skipping the immediate validation that was causing issues
-    // Instead, we'll display the dashboard right away
+    // Display the dashboard right away
     console.log("Dashboard component mounted");
     setLoading(false);
     
@@ -24,38 +74,23 @@ const DashboardPage = () => {
       fetchUserData();
     }, 2000); // Wait 2 seconds before trying to validate session
     
-    return () => clearTimeout(delayedFetch);
-  }, []);
-  
-  // Separated the fetch function for clarity
-  const fetchUserData = async () => {
-    try {
-      console.log('Attempting to fetch user data...');
-      const data = await getCurrentUser();
-      console.log('User data successfully fetched', data);
-      // setUserData(data); // Removed since we're not using userData state
-      // Update displayed user info if needed
-      // Update displayed user info if needed
-    } catch (error) {
-      console.log('Error fetching user data:', error);
-      // We won't automatically log out the user now
-      // Only log them out if they try to perform an action that requires fresh auth
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await logoutUser();
-      logout();
-      navigate('/login');
-      toast.success('Logged out successfully');
-    } catch (error) {
-      console.error('Logout error:', error);
-      // Force logout even if API call fails
-      logout();
-      navigate('/login');
-    }
-  };
+    // Session timer countdown
+    const timer = setInterval(() => {
+      setSessionTime(prevTime => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          handleSessionTimeout();
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+    
+    return () => {
+      clearTimeout(delayedFetch);
+      clearInterval(timer);
+    };
+  }, [fetchUserData, handleSessionTimeout]);
 
   if (loading) {
     return (
@@ -106,46 +141,24 @@ const DashboardPage = () => {
           </div>
         </div>
 
-        {/* Dashboard content - with improved responsiveness */}
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Security card */}
-          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-            <div className="px-4 sm:px-6 py-6 sm:py-8">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Security Status</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm sm:text-base">Secure connection</span>
-                  <span className="text-green-400 text-sm sm:text-base">Active</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm sm:text-base">Session expires in</span>
-                  <span className="text-yellow-400 text-sm sm:text-base">30 minutes</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm sm:text-base">Last login</span>
-                  <span className="text-gray-300 text-sm sm:text-base">Just now</span>
-                </div>
+        {/* Security card with live session timer */}
+        <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
+          <div className="px-4 sm:px-6 py-6 sm:py-8">
+            <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Security Status</h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400 text-sm sm:text-base">Secure connection</span>
+                <span className="text-green-400 text-sm sm:text-base">Active</span>
               </div>
-            </div>
-          </div>
-
-          {/* Project info card */}
-          <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
-            <div className="px-4 sm:px-6 py-6 sm:py-8">
-              <h3 className="text-lg sm:text-xl font-bold text-white mb-4">Project Information</h3>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm sm:text-base">Project name</span>
-                  <span className="text-pink-500 text-sm sm:text-base">SecureConnect</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm sm:text-base">Status</span>
-                  <span className="text-green-400 text-sm sm:text-base">Completed</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400 text-sm sm:text-base">Score</span>
-                  <span className="text-yellow-400 text-sm sm:text-base">250 points</span>
-                </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400 text-sm sm:text-base">Session expires in</span>
+                <span className={`text-sm sm:text-base ${sessionTime < 300 ? 'text-red-400' : 'text-yellow-400'}`}>
+                  {formatTime(sessionTime)}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-gray-400 text-sm sm:text-base">Last login</span>
+                <span className="text-gray-300 text-sm sm:text-base">{lastLoginTime}</span>
               </div>
             </div>
           </div>

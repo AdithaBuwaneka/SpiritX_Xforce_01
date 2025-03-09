@@ -1,42 +1,73 @@
-# SecureConnect Frontend
+SecureConnect
+A modern, secure authentication system built with React, Vite, and Tailwind CSS.
+Project Overview
+SecureConnect is a full-featured authentication system that provides a secure and user-friendly login experience. This implementation demonstrates best practices in frontend authentication, secure session management, and responsive user interface design.
+Features
+Signup Page
 
-This is the frontend implementation for the SecureConnect project, a secure and user-friendly authentication system built with React, Vite, and Tailwind CSS.
+Username validation (minimum 8 characters)
+Password strength requirements:
 
-## Project Overview
+Lowercase letters
+Uppercase letters
+Special characters
 
-SecureConnect consists of two main parts:
-- **Signup Page**: Where users create their accounts with a unique username and strong password
-- **Login Page**: Where users sign in and are greeted with a friendly, personalized welcome page
 
-## Features 
+Real-time validation with instant feedback
+Password strength indicator
+Confirmation dialog and automatic redirect
 
-### Signup Page (Total: 110 points)
-- **Easy (30 Points)**
-  - Three input fields - Username, Password, Confirm Password
-  - Error display under each input field if validation fails
-  - Prevention of signup if any field is empty
-- **Medium (50 Points)**
-  - Username validation (at least 8 characters and unique)
-  - Password requirements (lowercase letter, uppercase letter, special character)
-  - Password confirmation matching
-  - Real-time validation feedback
-- **Hard (30 Points)**
-  - Authentication errors displayed above the CTA button
-  - Success confirmation with automatic redirect after 2 seconds
-  - Password strength indicator with dynamic updates
+Login Page
 
-### Login Page (Total: 140 Points)
-- **Easy (30 Points)**
-  - Two input fields - Username and Password
-  - Error display under each field if validation fails
-  - Prevention of login if fields are empty
-- **Medium (60 Points)**
-  - Error handling and validation
-  - Username/password checking
-  - Real-time validation feedback
-- **Hard (50 Points)**
-  - Success navigation to landing page with personalized greeting
-  - Session management for persistence
-  - Logout functionality
+Secure authentication with error handling
+Session management with timeout
+Responsive design for all devices
+Password visibility toggle
 
-##
+Dashboard
+
+Live session countdown timer
+Security status monitoring
+Last login information
+Secure logout functionality
+
+Tech Stack
+
+React - Frontend library
+Vite - Build tool and development server
+Tailwind CSS - Utility-first CSS framework
+React Router - Client-side routing
+React Icons - Icon components
+React Hot Toast - Toast notifications
+
+Project Structure
+Copyfrontend/
+├── node_modules/       # Dependencies
+├── public/             # Static assets
+├── src/
+│   ├── assets/         # Images, fonts, etc.
+│   ├── components/     # Reusable UI components
+│   │   ├── Alert.jsx
+│   │   ├── LoadingSpinner.jsx
+│   │   └── PasswordStrengthMeter.jsx
+│   ├── contexts/       # React context providers
+│   │   └── AuthContext.jsx
+│   ├── pages/          # Page components
+│   │   ├── DashboardPage.jsx
+│   │   ├── LoginPage.jsx
+│   │   ├── NotFoundPage.jsx
+│   │   └── SignupPage.jsx
+│   ├── services/       # API services
+│   │   └── authService.js
+│   ├── App.jsx         # Main component
+│   ├── index.css
+│   └── main.jsx        # Entry point
+├── .env                # Environment variables
+├── .gitignore
+├── eslint.config.js    # ESLint configuration
+├── index.html
+├── package.json        # Dependencies and scripts
+├── postcss.config.js   # PostCSS configuration
+├── README.md           # Project documentation
+├── tailwind.config.js  # Tailwind CSS configuration
+└── vite.config.js      # Vite configuration
