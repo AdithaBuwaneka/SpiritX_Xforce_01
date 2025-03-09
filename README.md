@@ -10,8 +10,8 @@
 ### Clone the Repository
 1. Clone the repository from GitHub:
    ```bash
-   git clone https://github.com/AdithaBuwaneka/Spiritx.git](https://github.com/AdithaBuwaneka/SpiritX_Xforce_01.git
-   cd Spiritx
+   git clone https://github.com/AdithaBuwaneka/SpiritX_Xforce_01.git
+   cd SpiritX_Xforce_01
    ```
 
 ### Backend Setup
