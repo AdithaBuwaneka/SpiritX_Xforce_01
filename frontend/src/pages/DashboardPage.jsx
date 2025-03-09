@@ -18,6 +18,12 @@ const DashboardPage = () => {
   // Handle logout with useCallback
   const handleLogout = useCallback(async () => {
     try {
+      // Display toast notification when user clicks logout
+      toast.success('Logged out successfully', {
+        id: 'logout-success',
+        duration: 3000 // 3 seconds
+      });
+      
       await logoutUser();
       logout();
       navigate('/login');
@@ -25,6 +31,10 @@ const DashboardPage = () => {
     } catch (error) {
       console.error('Logout error:', error);
       // Force logout even if API call fails
+      toast.error('Error during logout, redirecting anyway', {
+        id: 'logout-error',
+        duration: 3000
+      });
       logout();
       navigate('/login');
     }
