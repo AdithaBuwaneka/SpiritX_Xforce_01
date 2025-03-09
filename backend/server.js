@@ -20,11 +20,20 @@ connectDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors({
-  origin: process.env.NODE_ENV === 'production' ? 'https://yourdomain.com' : 'http://localhost:3000',
-  credentials: true
-}));
-
+// Simplified CORS configuration
+if (process.env.NODE_ENV === 'production') {
+  // Strict CORS for production
+  app.use(cors({
+    origin: 'https://yourdomain.com',
+    credentials: true
+  }));
+} else {
+  // Allow all origins in development
+  app.use(cors({
+    origin: true, // This allows any origin
+    credentials: true
+  }));
+}
 // Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET,

@@ -5,6 +5,18 @@ import { FaUser, FaLock, FaEye, FaEyeSlash, FaUserShield } from 'react-icons/fa'
 import { signupUser } from '../services/authService';
 import PasswordStrengthMeter from '../components/PasswordStrengthMeter';
 
+// CSS to hide browser's default password toggle
+const hidePasswordControls = `
+  input::-ms-reveal,
+  input::-ms-clear,
+  input::-webkit-contacts-auto-fill-button,
+  input::-webkit-credentials-auto-fill-button {
+    display: none !important;
+    visibility: hidden;
+    pointer-events: none;
+  }
+`;
+
 const SignupPage = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -158,170 +170,177 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-gray-800 p-8 rounded-lg shadow-lg">
-        <div className="text-center">
-          <div className="flex justify-center mb-4">
-            <FaUserShield className="h-12 w-12 text-pink-500" />
-          </div>
-          <h1 className="text-3xl font-extrabold text-pink-500">SecureConnect</h1>
-          <h2 className="mt-6 text-2xl font-bold text-white">Sign Up</h2>
-          <p className="mt-2 text-sm text-gray-400">Create your account to get started</p>
-        </div>
-        
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* Form error message */}
-          {errors.form && (
-            <div className="bg-red-900/50 text-red-200 p-3 rounded-md text-sm">
-              {errors.form}
+    <>
+      {/* Inject CSS to hide browser's default password toggle */}
+      <style>{hidePasswordControls}</style>
+      
+      <div className="min-h-screen flex items-center justify-center bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-md w-full space-y-8 bg-gray-800 p-8 rounded-lg shadow-lg">
+          <div className="text-center">
+            <div className="flex justify-center mb-2">
+              <FaUserShield className="h-12 w-12 text-pink-500" />
             </div>
-          )}
-          
-          {/* Username field */}
-          <div>
-            <label htmlFor="username" className="sr-only">Username</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaUser className="h-5 w-5 text-gray-500" />
-              </div>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                autoComplete="username"
-                value={formData.username}
-                onChange={handleChange}
-                className={`appearance-none relative block w-full px-3 py-3 pl-10 border ${
-                  errors.username ? 'border-red-500' : 'border-gray-600'
-                } bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
-                placeholder="Username (min. 8 characters)"
-              />
-            </div>
-            {errors.username && (
-              <p className="mt-1 text-sm text-red-400">{errors.username}</p>
-            )}
+            <h1 className="text-3xl font-extrabold text-pink-500">SecureConnect</h1>
+            <h2 className="mt-3 text-2xl font-bold text-white">Sign Up</h2>
+            <p className="mt-2 text-sm text-gray-400">Create your account to get started</p>
           </div>
           
-          {/* Password field */}
-          <div>
-            <label htmlFor="password" className="sr-only">Password</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-gray-500" />
-              </div>
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`appearance-none relative block w-full px-3 py-3 pl-10 pr-10 border ${
-                  errors.password ? 'border-red-500' : 'border-gray-600'
-                } bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
-                placeholder="Password"
-              />
-              <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? (
-                  <FaEyeSlash className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <FaEye className="h-5 w-5 text-gray-500" />
-                )}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="mt-1 text-sm text-red-400">{errors.password}</p>
-            )}
-            
-            {/* Password strength meter */}
-            {formData.password && (
-              <div className="mt-2">
-                <PasswordStrengthMeter strength={passwordStrength} />
+          <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+            {/* Form error message */}
+            {errors.form && (
+              <div className="bg-red-900/50 text-red-200 p-3 rounded-md text-sm">
+                {errors.form}
               </div>
             )}
             
-            {/* Password requirements */}
-            <div className="mt-2 text-xs text-gray-400">
-              <p>Password must contain:</p>
-              <ul className="list-disc pl-5 space-y-1 mt-1">
-                <li className={formData.password.length >= 8 ? 'text-green-400' : ''}>
-                  At least 8 characters
-                </li>
-                <li className={/[a-z]/.test(formData.password) ? 'text-green-400' : ''}>
-                  One lowercase letter
-                </li>
-                <li className={/[A-Z]/.test(formData.password) ? 'text-green-400' : ''}>
-                  One uppercase letter
-                </li>
-                <li className={/[^a-zA-Z0-9]/.test(formData.password) ? 'text-green-400' : ''}>
-                  One special character
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          {/* Confirm Password field */}
-          <div>
-            <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
-            <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <FaLock className="h-5 w-5 text-gray-500" />
+            {/* Username field */}
+            <div>
+              <label htmlFor="username" className="sr-only">Username</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center z-10">
+                  <FaUser className="h-5 w-5 text-gray-500" />
+                </div>
+                <input
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-3 pl-10 border 
+                    border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Username (min. 8 characters)"
+                />
               </div>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type={showConfirmPassword ? "text" : "password"}
-                autoComplete="new-password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`appearance-none relative block w-full px-3 py-3 pl-10 pr-10 border ${
-                  errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
-                } bg-gray-700 text-white placeholder-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent`}
-                placeholder="Confirm Password"
-              />
+              {errors.username && (
+                <p className="mt-1 text-sm text-red-400">{errors.username}</p>
+              )}
+            </div>
+            
+            {/* Password field */}
+            <div>
+              <label htmlFor="password" className="sr-only">Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center z-10">
+                  <FaLock className="h-5 w-5 text-gray-500" />
+                </div>
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-3 pl-10 pr-10 border 
+                    border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center z-10"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <FaEyeSlash className="h-5 w-5 text-gray-500" />
+                  ) : (
+                    <FaEye className="h-5 w-5 text-gray-500" />
+                  )}
+                </button>
+              </div>
+              {errors.password && (
+                <p className="mt-1 text-sm text-red-400">{errors.password}</p>
+              )}
+              
+              {/* Password strength meter */}
+              {formData.password && (
+                <div className="mt-2">
+                  <PasswordStrengthMeter strength={passwordStrength} />
+                </div>
+              )}
+              
+              {/* Password requirements */}
+              <div className="mt-2 text-xs text-gray-400">
+                <p>Password must contain:</p>
+                <ul className="list-disc pl-5 space-y-1 mt-1">
+                  <li className={formData.password.length >= 8 ? 'text-green-400' : ''}>
+                    At least 8 characters
+                  </li>
+                  <li className={/[a-z]/.test(formData.password) ? 'text-green-400' : ''}>
+                    One lowercase letter
+                  </li>
+                  <li className={/[A-Z]/.test(formData.password) ? 'text-green-400' : ''}>
+                    One uppercase letter
+                  </li>
+                  <li className={/[^a-zA-Z0-9]/.test(formData.password) ? 'text-green-400' : ''}>
+                    One special character
+                  </li>
+                </ul>
+              </div>
+            </div>
+            
+            {/* Confirm Password field */}
+            <div>
+              <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center z-10">
+                  <FaLock className="h-5 w-5 text-gray-500" />
+                </div>
+                <input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  autoComplete="new-password"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="appearance-none relative block w-full px-3 py-3 pl-10 pr-10 border 
+                    border-gray-600 bg-gray-700 text-white placeholder-gray-400 rounded-md 
+                    focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent"
+                  placeholder="Confirm Password"
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center z-10"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                >
+                  {showConfirmPassword ? (
+                    <FaEyeSlash className="h-5 w-5 text-gray-500" />
+                  ) : (
+                    <FaEye className="h-5 w-5 text-gray-500" />
+                  )}
+                </button>
+              </div>
+              {errors.confirmPassword && (
+                <p className="mt-1 text-sm text-red-400">{errors.confirmPassword}</p>
+              )}
+            </div>
+            
+            {/* Submit button */}
+            <div>
               <button
-                type="button"
-                className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                type="submit"
+                disabled={isSubmitting}
+                className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
-                {showConfirmPassword ? (
-                  <FaEyeSlash className="h-5 w-5 text-gray-500" />
-                ) : (
-                  <FaEye className="h-5 w-5 text-gray-500" />
-                )}
+                {isSubmitting ? 'Creating Account...' : 'Sign Up'}
               </button>
             </div>
-            {errors.confirmPassword && (
-              <p className="mt-1 text-sm text-red-400">{errors.confirmPassword}</p>
-            )}
-          </div>
+          </form>
           
-          {/* Submit button */}
-          <div>
-            <button
-              type="submit"
-              disabled={isSubmitting}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-pink-600 hover:bg-pink-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isSubmitting ? 'Creating Account...' : 'Sign Up'}
-            </button>
+          <div className="text-center mt-4">
+            <p className="text-sm text-gray-400">
+              Already have an account?{' '}
+              <Link to="/login" className="font-medium text-pink-500 hover:text-pink-400">
+                Log In
+              </Link>
+            </p>
           </div>
-        </form>
-        
-        <div className="text-center mt-4">
-          <p className="text-sm text-gray-400">
-            Already have an account?{' '}
-            <Link to="/login" className="font-medium text-pink-500 hover:text-pink-400">
-              Log In
-            </Link>
-          </p>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
