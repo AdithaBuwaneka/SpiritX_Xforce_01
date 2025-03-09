@@ -120,7 +120,7 @@ const DashboardPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center">
           <div className="flex items-center mb-4 sm:mb-0">
             <FaUserShield className="h-8 w-8 text-pink-500 mr-3" />
-            <h1 className="text-2xl font-bold text-white">SecureConnect</h1>
+            <h1 className="text-2xl font-bold text-pink-500">SecureConnect</h1>
           </div>
           <button
             onClick={handleLogout}
