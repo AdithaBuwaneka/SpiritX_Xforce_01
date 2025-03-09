@@ -25,7 +25,7 @@
    npm install
    ```
 
-3. Create a `.env` file with the following configuration:
+3. Create a .env file in the backend directory with the following:
    ```
    MONGO_URI=mongodb+srv://adithabuwaneka0:oUKa76FgEJ5kwXVb@spiritx.pnu1d.mongodb.net/SecureConnect_DB
    NODE_ENV=development
@@ -53,7 +53,7 @@
    npm install
    ```
 
-3. Create a `.env` file with the following configuration:
+3. Create a .env file in the frontend directory with the following:
    ```
    VITE_API_URL=http://localhost:5000/api
    ```
