@@ -10,7 +10,7 @@
 ### Clone the Repository
 1. Clone the repository from GitHub:
    ```bash
-   git clone https://github.com/AdithaBuwaneka/Spiritx.git
+   git clone https://github.com/AdithaBuwaneka/Spiritx.git](https://github.com/AdithaBuwaneka/SpiritX_Xforce_01.git
    cd Spiritx
    ```
 
