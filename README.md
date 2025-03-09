@@ -1,210 +1,121 @@
-# SecureConnect - User Authentication System
+# SecureConnect
 
-## Project Overview
-SecureConnect is a secure and user-friendly authentication system developed for the SpiritX Hackathon 2025. The system provides a robust signup and login functionality with proper validation, error handling, and session management.
-
-## Features
-
-### Signup Page (110 points)
-- **Easy Level (30 points)**
-  - Three input fields (Username, Password, Confirm Password)
-  - Error display under each input field
-  - Empty field validation
-  
-- **Medium Level (50 points)**
-  - Username validation (8+ characters, uniqueness check)
-  - Password requirements (lowercase, uppercase, special character)
-  - Password confirmation matching
-  - Real-time validation as user types
-  
-- **Hard Level (30 points)**
-  - Authentication errors above submit button
-  - Confirmation dialog with auto-redirect after signup
-  - Password strength indicator
-
-### Login Page (140 points)
-- **Easy Level (30 points)**
-  - Two input fields (Username, Password)
-  - Error display under each input field
-  - Empty field validation
-  
-- **Medium Level (60 points)**
-  - Advanced error handling and validation
-  - Username existence and password correctness verification
-  - Real-time validation
-  
-- **Hard Level (50 points)**
-  - Successful login redirects to personalized dashboard
-  - Personalized welcome message ("Hello, username!")
-  - Session management (keeps user logged in until logout)
-
-## Tech Stack
-- **Frontend**: React.js, Vite, Tailwind CSS
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB
-- **Authentication**: JWT (JSON Web Tokens)
-
-## Installation & Setup
+## Instructions to Run the Project
 
 ### Prerequisites
 - Node.js (v14 or higher)
 - npm (v6 or higher)
-- MongoDB Atlas account or local MongoDB installation
+- MongoDB (local or Atlas)
 
-### Database Setup
-1. Create a MongoDB Atlas cluster or use a local MongoDB installation
-2. Create a database named `SecureConnect_DB`
-3. The application will automatically create the required collections when first run
+### Backend Setup
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
 
-### Environment Variables
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-#### Backend (.env file in the backend directory)
-```
-MONGO_URI=mongodb+srv://<username>:<password>@spiritx.pnu1d.mongodb.net/SecureConnect_DB
-NODE_ENV=development
-PORT=5000
-JWT_SECRET=f16a1d67f8de5886df2157f4c034dcaa8b943b7e1dc4e69f7c3f12d12a25f698
-JWT_EXPIRES_IN=1d
-SESSION_SECRET=PX8r2vY7fL9sKqTzGn4mHj3bWc6xE5dA
-SESSION_EXPIRE=30m
-```
+3. Create a `.env` file with the following configuration:
+   ```
+   MONGO_URI=mongodb+srv://adithabuwaneka0:oUKa76FgEJ5kwXVb@spiritx.pnu1d.mongodb.net/SecureConnect_DB
+   NODE_ENV=development
+   PORT=5000
+   JWT_SECRET=f16a1d67f8de5886df2157f4c034dcaa8b943b7e1dc4e69f7c3f12d12a25f698
+   JWT_EXPIRES_IN=1d
+   SESSION_SECRET=PX8r2vY7fL9sKqTzGn4mHj3bWc6xE5dA
+   SESSION_EXPIRE=30m
+   ```
 
-#### Frontend (.env file in the frontend directory)
-```
-VITE_API_URL=http://localhost:5000/api
-```
+4. Start the backend server:
+   ```bash
+   npm start
+   ```
+   The server will run on http://localhost:5000
 
-### Installation Steps
+### Frontend Setup
+1. Navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
 
-1. Clone the repository
-```bash
-git clone https://github.com/YourUsername/SpiritX_TeamName_01.git
-cd SpiritX_TeamName_01
-```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-2. Install backend dependencies
-```bash
-cd backend
-npm install
-```
+3. Create a `.env` file with the following configuration:
+   ```
+   VITE_API_URL=http://localhost:5000/api
+   ```
 
-3. Install frontend dependencies
-```bash
-cd ../frontend
-npm install
-```
+4. Start the frontend development server:
+   ```bash
+   npm run dev
+   ```
+   
 
-4. Start the backend server
-```bash
-cd ../backend
-npm start
-```
+## Database Setup and Configuration
 
-5. In a new terminal, start the frontend development server
-```bash
-cd ../frontend
-npm run dev
-```
+The application uses MongoDB as its database. The connection is automatically established when the backend server starts using the MongoDB URI provided in the `.env` file.
 
-6. Access the application at `http://localhost:3000`
+Database schema includes:
+- User model with fields for username, password, and creation timestamp
+- Passwords are securely hashed using bcrypt before storage
+- JWT is used for authentication tokens
 
-## Development Assumptions
+You don't need to manually create collections; they will be automatically created when the application is first used.
 
-1. **User Experience**: The application prioritizes user feedback with real-time validation and clear error messages to guide users through the authentication process.
+## Assumptions Made During Development
 
-2. **Security**: 
-   - Passwords are hashed using bcrypt before storage
-   - Session management is implemented using JWT tokens
-   - Form inputs are validated both client-side and server-side
+1. **Security Assumptions**:
+   - Users need strong passwords with lowercase, uppercase, and special characters
+   - Session timeout after 30 minutes of inactivity
+   - JWT tokens for secure authentication
+   - All sensitive data is encrypted/hashed
 
-3. **API Design**: The backend follows RESTful API principles with endpoints for user authentication, validation, and session management.
+2. **User Experience Assumptions**:
+   - Real-time validation feedback is essential for good UX
+   - Clear error messages should guide users
+   - The UI should be responsive and work across various devices
+   - Visual indicators (like password strength meter) improve user understanding
 
-4. **Responsiveness**: The UI is designed to be fully responsive across various device sizes.
+3. **Technical Assumptions**:
+   - The application needs both client-side and server-side validation
+   - Session management should be handled via JWT and cookies
+   - Error handling should be comprehensive and user-friendly
+   - The API follows RESTful design principles
 
-## Additional Features
+## Additional Features Implemented
 
-1. **Password Strength Meter**: Visual indicator showing password strength based on complexity.
+The SecureConnect project implements all required features from the project specification (250 total points) and includes these additional enhancements:
 
-2. **Real-time Validation**: Form fields are validated in real-time as the user types.
+1. **Live Session Countdown Timer**:
+   - Implemented a real-time countdown timer on the dashboard
+   - Timer visually shows the remaining session time before automatic logout
+   - Changes color from yellow to red when session is about to expire
+   - Automatically logs out the user when time reaches zero
 
-3. **Personalized Dashboard**: Upon successful login, users are greeted with a personalized dashboard displaying their session information.
+2. **Password Visibility Toggle**:
+   - Added show/hide password functionality on login and signup forms
+   - Improves user experience while maintaining security
+   - Custom implementation that avoids browser's built-in password reveal
 
-4. **Error Handling**: Comprehensive error handling throughout the application with user-friendly error messages.
+3. **Enhanced Error Handling**:
+   - Structured API responses with consistent error formatting
+   - Detailed field-specific error messages
+   - Comprehensive validation feedback
+   - Toast notifications for system messages
 
-5. **Session Management**: Users remain logged in until they explicitly log out or their session expires.
+4. **Custom 404 Not Found Page**:
+   - Implemented a dedicated page for handling invalid routes
+   - User-friendly error message with clear navigation options
+   - Smart redirect button that changes based on authentication status
+   - Consistent styling with the rest of the application
 
-## Project Structure
-
-### Frontend
-```
-frontend/
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   │   ├── Alert.jsx
-│   │   ├── LoadingSpinner.jsx
-│   │   ├── PasswordStrengthMeter.jsx
-│   │   ├── ProtectedRoute.jsx
-│   │   └── PublicRoute.jsx
-│   ├── contexts/
-│   │   └── AuthContext.jsx
-│   ├── pages/
-│   │   ├── DashboardPage.jsx
-│   │   ├── LoginPage.jsx
-│   │   ├── NotFoundPage.jsx
-│   │   └── SignupPage.jsx
-│   ├── services/
-│   │   └── authService.js
-│   ├── App.jsx
-│   ├── index.css
-│   └── main.jsx
-├── .env
-├── package.json
-└── vite.config.js
-```
-
-### Backend
-```
-backend/
-├── src/
-│   ├── config/
-│   │   └── db.js
-│   ├── controllers/
-│   │   └── authController.js
-│   ├── middlewares/
-│   │   ├── authMiddleware.js
-│   │   ├── errorMiddleware.js
-│   │   └── validationMiddleware.js
-│   ├── models/
-│   │   └── User.js
-│   └── routes/
-│       └── authRoutes.js
-├── .env
-├── package.json
-└── server.js
-```
-
-## Challenges Faced
-- Implementing secure and efficient session management
-- Ensuring real-time validation without overwhelming server requests
-- Creating a responsive and user-friendly interface
-- Balancing security requirements with user experience
-
-## Future Improvements
-- Implement email verification for new accounts
-- Add two-factor authentication
-- Enhance password recovery flow
-- Expand the dashboard with more user profile features
-- Implement rate limiting to prevent brute force attacks
-
-## Video Demonstrations
-1. [Signup Process Demo](https://drive.google.com/link-to-your-video)
-2. [Login and Dashboard Demo](https://drive.google.com/link-to-your-video)
-
-## Contributors
-- Your Name
-- Team Member Names (if applicable)
-
-## License
-This project is licensed under the MIT License.
+5. **Mobile-Responsive Design**:
+   - Fully responsive layout that works on all device sizes
+   - Optimized component rendering for different screen widths
+   - Consistent experience across mobile, tablet, and desktop
